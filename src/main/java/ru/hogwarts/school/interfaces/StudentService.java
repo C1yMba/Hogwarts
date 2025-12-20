@@ -1,19 +1,25 @@
 package ru.hogwarts.school.interfaces;
 
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.model.dto.StudentDto;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public interface StudentService {
 
-    Student createNewStudent(Student student);
+    Student createNewStudent(StudentDto student);
 
     Optional<Student> getExistentStudent(Long id);
 
-    Student updateExistentStudent(Student student);
+    Optional<Faculty> getStudentFaculty(Long studentId);
+
+    Student updateExistentStudent(Long studentId, StudentDto student);
 
     void deleteExistentStudent(Long id);
 
     Collection<Student> findByAge(int age);
+
+    Collection<Student> findByAgeBetweenValues(int minAge, int maxAge);
 }
