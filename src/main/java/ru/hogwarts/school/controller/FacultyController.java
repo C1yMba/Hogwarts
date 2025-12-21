@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.interfaces.FacultyService;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.model.dto.FacultyDto;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,13 +28,15 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyService.createFaculty(faculty);
+    public Faculty createFaculty(@RequestBody FacultyDto facultyDto) {
+        return facultyService.createFaculty(facultyDto);
     }
 
-    @PutMapping
-    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
-        Faculty foundFaculty = facultyService.updateFaculty(faculty);
+    @PutMapping("/{id}")
+    public ResponseEntity<Faculty> editFaculty(
+            @PathVariable Long id,
+            @RequestBody FacultyDto faculty) {
+        Faculty foundFaculty = facultyService.updateFaculty(id, faculty);
         if (foundFaculty == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -52,4 +56,19 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+
+    @GetMapping("/name_or_color")
+    public ResponseEntity<Collection<Faculty>> findFacultiesByNameOrColor(@RequestParam(required = false) String value) {
+        if (value != null && !value.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByNameOrColorIgnoreCase(value));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("{faculty_id}")
+    public ResponseEntity<Collection<Student>> getStudentFaculty(@PathVariable Long facultyId) {
+        Optional<Collection<Student>> students = facultyService.findStudentsByFacultyId(facultyId);
+        return students.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }
