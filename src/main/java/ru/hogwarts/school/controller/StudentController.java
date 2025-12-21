@@ -56,7 +56,7 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping("{min_age}")
+    @GetMapping("/between/{min_age}")
     public ResponseEntity<Collection<Student>> findStudentsWhereAgeBetweenValues(
             @PathVariable(name = "min_age",required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge) {
