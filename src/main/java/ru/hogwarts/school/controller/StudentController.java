@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,24 +26,25 @@ public class StudentController {
         return studentService.createNewStudent(newStudent);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         Optional<Student> student = studentService.getExistentStudent(id);
         return student.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update-student/{id}")
     public ResponseEntity<Student> updateStudent(
             @PathVariable Long id,
             @RequestBody StudentDto student) {
-        Student foundStudent = studentService.updateExistentStudent(id, student);
-        if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        try {
+            Student foundStudent = studentService.updateExistentStudent(id, student);
+            return ResponseEntity.ok(foundStudent);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(foundStudent);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/delete-student/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteExistentStudent(id);
         return ResponseEntity.ok().build();
@@ -70,7 +72,7 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping("{studentId}")
+    @GetMapping("/faculty/{studentId}")
     public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long studentId) {
         Optional<Faculty> faculty = studentService.getStudentFaculty(studentId);
         return faculty.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

@@ -21,7 +21,7 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
         Optional<Faculty> faculty = facultyService.getFaculty(id);
         return faculty.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
@@ -32,7 +32,7 @@ public class FacultyController {
         return facultyService.createFaculty(facultyDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Faculty> editFaculty(
             @PathVariable Long id,
             @RequestBody FacultyDto faculty) {
@@ -43,7 +43,7 @@ public class FacultyController {
         return ResponseEntity.ok(foundFaculty);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
@@ -65,8 +65,8 @@ public class FacultyController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping("{faculty_id}")
-    public ResponseEntity<Collection<Student>> getStudentFaculty(@PathVariable Long facultyId) {
+    @GetMapping("/student/{faculty_id}")
+    public ResponseEntity<Collection<Student>> getStudentFaculty(@PathVariable("faculty_id") Long facultyId) {
         Optional<Collection<Student>> students = facultyService.findStudentsByFacultyId(facultyId);
         return students.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
