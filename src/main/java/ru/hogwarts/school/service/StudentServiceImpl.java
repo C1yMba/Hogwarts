@@ -79,6 +79,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Long findStudentsQuantity() {
+        return studentsRepository.findStudentsQuantity();
+    }
+
+    @Override
+    public Double findStudentsAverageAge() {
+        return studentsRepository.findStudentsAverageAge();
+    }
+
+    @Override
+    public Collection<Student> findLastFiveStudents() {
+        return studentsRepository.findLastFiveStudents();
+    }
+
+
+    @Override
     public Collection<Student> findByAgeBetweenValues(int minAge, int maxAge) {
         return studentsRepository.findByAgeBetween(minAge, maxAge);
     }

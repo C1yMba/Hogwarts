@@ -21,5 +21,11 @@ public interface StudentService {
 
     Collection<Student> findByAge(int age);
 
+    Long findStudentsQuantity();
+
     Collection<Student> findByAgeBetweenValues(int minAge, int maxAge);
+
+    Double findStudentsAverageAge();
+
+    Collection<Student> findLastFiveStudents();
 }
