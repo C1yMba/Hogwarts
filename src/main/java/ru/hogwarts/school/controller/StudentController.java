@@ -58,9 +58,24 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
+    @GetMapping("/quantity")
+    public ResponseEntity<Long> findStudentsQuantity() {
+        return ResponseEntity.ok(studentService.findStudentsQuantity());
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> findStudentsAverageAge() {
+        return ResponseEntity.ok(studentService.findStudentsAverageAge());
+    }
+
+    @GetMapping("/last-five")
+    public ResponseEntity<Collection<Student>> findLastFiveStudents() {
+        return ResponseEntity.ok(studentService.findLastFiveStudents());
+    }
+
     @GetMapping("/between/{min_age}")
     public ResponseEntity<Collection<Student>> findStudentsWhereAgeBetweenValues(
-            @PathVariable(name = "min_age",required = false) Integer minAge,
+            @PathVariable(name = "min_age", required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge) {
 
         if (minAge != null && maxAge != null && minAge >= 0 && maxAge >= 0 && minAge <= maxAge) {
